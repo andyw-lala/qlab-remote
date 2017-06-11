@@ -44,10 +44,10 @@ const int rew_led = 21;
 /*
  * Bounce objects for each button.
  */
-Bounce go_button   = Bounce(go_input, 10);
-Bounce stop_button = Bounce(stop_input, 10);  // 10 = 10 ms debounce time
-Bounce fwd_button  = Bounce(fwd_input, 10);  // which is appropriate for
-Bounce rew_button  = Bounce(rew_input, 10);  // most mechanical pushbuttons
+Bounce go_button   = Bounce(go_input, DEBOUNCE_MS);
+Bounce stop_button = Bounce(stop_input, DEBOUNCE_MS);
+Bounce fwd_button  = Bounce(fwd_input, DEBOUNCE_MS);
+Bounce rew_button  = Bounce(rew_input, DEBOUNCE_MS);
 
 void setup() {
   /*
