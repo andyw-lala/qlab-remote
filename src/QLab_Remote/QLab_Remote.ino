@@ -86,25 +86,23 @@ void loop() {
   
 
   /*
-   * Onlr react to falling edges of buttons (they are active low.)
+   * Only react to falling edges of buttons (they are active low.)
+   *
+   * TODO: use Keyboard.write() to send approriate keystroke.
    */
   if (go_button.fallingEdge()) {
-//  Keyboard.println("B0 press");
     led = 1;
     digitalWrite(go_led, 1);
   }
   if (stop_button.fallingEdge()) {
-//  Keyboard.println("B1 press");
     led = 0;
     digitalWrite(stop_led, 1);
   }
   if (fwd_button.fallingEdge()) {
-//  Keyboard.println("B2 press");
     led ^= 1;
     digitalWrite(fwd_led, 1);
   }
   if (rew_button.fallingEdge()) {
-//  Keyboard.println("B3 press");
     if (led == 0) {
       led = 1;
     } else {
