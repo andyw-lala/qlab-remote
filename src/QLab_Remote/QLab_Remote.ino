@@ -39,7 +39,7 @@ const int rew_led = 21;
  * Debounce time used, if the buttons you use are noiser, you may want to
  * increase this value.
  */
-#define DEBOUNCE_MS	(10)
+#define DEBOUNCE_MS	(20)
 
 /*
  * Bounce objects for each button.
@@ -66,12 +66,10 @@ void setup() {
   pinMode(fwd_led, OUTPUT);
   pinMode(rew_led, OUTPUT);
 
-  pinMode(13, OUTPUT);	/* Debug, on-board LED */
+  Keyboard.begin();
 }
 
 void loop() {
-  static int led = 0;
-
   /*
    * TODO: LED blinky pattern code goes here.
    */
@@ -91,24 +89,20 @@ void loop() {
    * TODO: use Keyboard.write() to send approriate keystroke.
    */
   if (go_button.fallingEdge()) {
-    led = 1;
     digitalWrite(go_led, 1);
+    Keyboard.press(' ');
   }
   if (stop_button.fallingEdge()) {
-    led = 0;
     digitalWrite(stop_led, 1);
+    Keyboard.press(KEY_ESC);
   }
   if (fwd_button.fallingEdge()) {
-    led ^= 1;
     digitalWrite(fwd_led, 1);
+    Keyboard.press(KEY_UP_ARROW);
   }
   if (rew_button.fallingEdge()) {
-    if (led == 0) {
-      led = 1;
-    } else {
-      led = 0;
-    }
     digitalWrite(rew_led, 1);
+    Keyboard.press(KEY_DOWN_ARROW);
   }
-  digitalWrite(13, led);
+  Keyboard.releaseAll();
 }
