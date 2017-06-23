@@ -49,6 +49,8 @@ Bounce stop_button = Bounce(stop_input, DEBOUNCE_MS);
 Bounce fwd_button  = Bounce(fwd_input, DEBOUNCE_MS);
 Bounce rew_button  = Bounce(rew_input, DEBOUNCE_MS);
 
+int greeting;
+
 void setup() {
   /*
    * Configure the button inputs with pullups, and the LED output
@@ -67,12 +69,45 @@ void setup() {
   pinMode(rew_led, OUTPUT);
 
   Keyboard.begin();
+
+  greeting = 9;
+}
+
+void blinky()
+{
+  switch (greeting-- % 3) {
+    case 0:
+      digitalWrite(fwd_led, 1);
+      digitalWrite(rew_led, 1);
+      break;
+    case 1:
+      digitalWrite(go_led, 1);
+      break;
+    case 2:
+      digitalWrite(stop_led, 1);
+      break;
+  }
+  delay(250);
+  if (greeting) {
+    digitalWrite(fwd_led, 0);
+    digitalWrite(rew_led, 0);
+    digitalWrite(stop_led, 0);
+    digitalWrite(go_led, 0);
+    delay(20);
+  } else {
+    digitalWrite(fwd_led, 1);
+    digitalWrite(rew_led, 1);
+    digitalWrite(stop_led, 1);
+    digitalWrite(go_led, 1);
+  }
 }
 
 void loop() {
-  /*
-   * TODO: LED blinky pattern code goes here.
-   */
+  
+   if (greeting) {
+    blinky();
+    return;
+   }
 
   /*
    * Call the update() method for all buttons.
