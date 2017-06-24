@@ -13,10 +13,6 @@
  * Originally based on Teensy example code.
  */
 
-/*
- * Early POC work done on a Teensy 3.6.
- */
-
 #include <Bounce.h>
 
 /*
@@ -49,6 +45,11 @@ Bounce stop_button = Bounce(stop_input, DEBOUNCE_MS);
 Bounce fwd_button  = Bounce(fwd_input, DEBOUNCE_MS);
 Bounce rew_button  = Bounce(rew_input, DEBOUNCE_MS);
 
+/*
+ * We flash the LEDs in a pattern on power up, the behaviour is driven
+ * by this variable. See blinky(). Once it is zero, the startup greeting
+ * is terminated and we revert to normal behaviour.
+ */
 int greeting;
 
 void setup() {
@@ -68,13 +69,30 @@ void setup() {
   pinMode(fwd_led, OUTPUT);
   pinMode(rew_led, OUTPUT);
 
+  /*
+   * Kick off the Keyboard HID device.
+   */
   Keyboard.begin();
 
+  /*
+   * Initialise the variable that drives the startup greeting.
+   * This should result in 3 iterations of the pattern.
+   */
   greeting = 9;
 }
 
+/*
+ * Generate the startup greeting by blinking the LEDs based on the
+ * value of greeting. Decrement it, and be sure to leave all the LEDs
+ * on after the pattern is completed (greeting == 0).
+ *
+ * Just use simple modulo 3 arithmetic to drive the pattern.
+ */
 void blinky()
 {
+  /*
+   * Figure out which LED(s) to turn on this pass
+   */
   switch (greeting-- % 3) {
     case 0:
       digitalWrite(fwd_led, 1);
@@ -87,7 +105,18 @@ void blinky()
       digitalWrite(stop_led, 1);
       break;
   }
+
+  /*
+   * Delay to show the pattern for 0.25 second
+   */
   delay(250);
+
+  /*
+   * If we are in the middle of the greeting, turn all the LEDs off and delay
+   * briefly before the next iteration.
+   * If we are done (greeting == 0) - just turn all the LEDs on, we will not
+   * be called again.
+   */
   if (greeting) {
     digitalWrite(fwd_led, 0);
     digitalWrite(rew_led, 0);
@@ -103,11 +132,6 @@ void blinky()
 }
 
 void loop() {
-  
-   if (greeting) {
-    blinky();
-    return;
-   }
 
   /*
    * Call the update() method for all buttons.
@@ -117,11 +141,22 @@ void loop() {
   fwd_button.update();
   rew_button.update();
   
+  /*
+   * Generate the startup greeting pattern until that sequence is complete
+   * (indicated by greeting == 0)
+   */
+  if (greeting) {
+    blinky();
+    return;
+  }
 
   /*
    * Only react to falling edges of buttons (they are active low.)
+   * We need to use Keyboard.press() to generate non-ascii keystrokes
+   * (up/down arrow) - so we normalise on that for all actions.
    *
-   * TODO: use Keyboard.write() to send approriate keystroke.
+   * This requires the use of Keyboard.release() or .releaseAll()
+   * to terminate the key press as far as the host is concerned.
    */
   if (go_button.fallingEdge()) {
     digitalWrite(go_led, 1);
@@ -139,5 +174,6 @@ void loop() {
     digitalWrite(rew_led, 1);
     Keyboard.press(KEY_DOWN_ARROW);
   }
+
   Keyboard.releaseAll();
 }
