@@ -56,8 +56,6 @@ void setup() {
   /*
    * Configure the button inputs with pullups, and the LED output
    * pins as outputs.
-   *
-   * TODO: Configure all other pins as outputs for minimum noise.
    */
   pinMode(go_input, INPUT_PULLUP);
   pinMode(stop_input, INPUT_PULLUP);
@@ -168,11 +166,11 @@ void loop() {
   }
   if (fwd_button.fallingEdge()) {
     digitalWrite(fwd_led, 1);
-    Keyboard.press(KEY_UP_ARROW);
+    Keyboard.press(KEY_DOWN_ARROW);
   }
   if (rew_button.fallingEdge()) {
     digitalWrite(rew_led, 1);
-    Keyboard.press(KEY_DOWN_ARROW);
+    Keyboard.press(KEY_UP_ARROW);
   }
 
   Keyboard.releaseAll();
