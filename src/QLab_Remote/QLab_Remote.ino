@@ -21,15 +21,15 @@
  * are going to keep the LEDs under program control, you should
  * continue to use these pins.
  */
-const int go_input = 0;
-const int stop_input = 1;
-const int fwd_input = 2;
-const int rew_input = 3;
+const int go_input = 6;
+const int stop_input = 18;
+const int fwd_input = 22;
+const int rew_input = 14;
 
 const int go_led = 5;
-const int stop_led = 16;
-const int fwd_led = 17;
-const int rew_led = 21;
+const int stop_led = 17;
+const int fwd_led = 21;
+const int rew_led = 16;
 
 /*
  * Debounce time used, if the buttons you use are noiser, you may want to
@@ -59,10 +59,10 @@ void setup() {
    *
    * TODO: Configure all other pins as outputs for minimum noise.
    */
-  pinMode(0, INPUT_PULLUP);
-  pinMode(1, INPUT_PULLUP);
-  pinMode(2, INPUT_PULLUP);
-  pinMode(3, INPUT_PULLUP);
+  pinMode(go_input, INPUT_PULLUP);
+  pinMode(stop_input, INPUT_PULLUP);
+  pinMode(fwd_input, INPUT_PULLUP);
+  pinMode(rew_input, INPUT_PULLUP);
 
   pinMode(go_led, OUTPUT);
   pinMode(stop_led, OUTPUT);
